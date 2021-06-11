@@ -15,6 +15,7 @@ Chitris is my personal verion of the popular game Tetris. Shapes will drop down 
     - The shapes will be able to rotate 
     - When the score hits a certain amount of points the speed will be increased 
     - On the Kill screen there will be the list of the scores 
+    - add music
 
 ## DATASTRUCTURE
     # main.js
