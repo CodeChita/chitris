@@ -31,4 +31,6 @@ Chitris is my personal verion of the popular game Tetris. Shapes will drop down 
         - check chitris
         - update score 
 
-
+# Additional Links
+## Trello
+    https://trello.com/b/DAVa63zt/chitris
