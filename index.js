@@ -49,8 +49,7 @@ function collisionBottom (){
 
 
 function createShape () {
-    let num = Math.floor(Math.random() * 3)
-    activeShape = new Shape(collectionShapes[num])
+    activeShape = new Shape(collectionShapes[Math.floor(Math.random() * 3)])
     activeState = 1
     drawShape(activeShape)    
 }
@@ -64,6 +63,10 @@ function blockStore(shape) {
     })
    })
 }
+
+// sort stored blocks 
+
+// score checker => splice... 
 
 function moveActiveBlock(){
     if (isLeft == true ){
