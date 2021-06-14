@@ -1,6 +1,7 @@
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#302f29'
 let ctx = canvas.getContext('2d')
+
 let activeShape = {}
 let activeState = 0
 let counter = 0
@@ -10,7 +11,6 @@ let isLeft = false, isRight = false, isDown = false;
 
 function drawShape (shape){
     shape.blocks.forEach((block) => {
-        // console.log(block.height)
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
@@ -22,7 +22,6 @@ function drawShape (shape){
 } 
 function drawStored (){
     storedBlocks.forEach((block) => {
-        // console.log(block.height)
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
@@ -50,7 +49,8 @@ function collisionBottom (){
 
 
 function createShape () {
-    activeShape = new Shape([{x: 50, y: 50, width: 50, height: 50}, {x: 50, y: 100, width: 50, height: 50},{x: 100, y: 50, width: 50, height: 50}, {x: 100, y: 100, width: 50, height: 50}])
+    let num = Math.floor(Math.random() * 3)
+    activeShape = new Shape(collectionShapes[num])
     activeState = 1
     drawShape(activeShape)    
 }
@@ -65,20 +65,20 @@ function blockStore(shape) {
    })
 }
 
-// function moveActiveBlock(){
-//     if (isLeft == true){
-//         squareX -= 50
-//         isLeft = false
-//     }
-//     else if (isRight == true){
-//         squareX += 50 
-//         isRight = false
-//     }
-//     else if (isDown == true){
-//         squareY += 50
-//         isDown = false
-//     }
-// }
+function moveActiveBlock(){
+    if (isLeft == true ){
+        activeShape.blocks.forEach((block) => block.x -= 50)
+        isLeft = false
+    }
+    else if (isRight == true){
+        activeShape.blocks.forEach((block) => block.x += 50)
+        isRight = false
+    }
+    else if (isDown == true){
+        activeShape.blocks.forEach((block) => block.y += 50)
+        isDown = false
+    }
+}
 
 
 function collisionBlocks(){
@@ -91,32 +91,6 @@ function collisionBlocks(){
         })
     })
 }
-
-
-// function collisionBlocks (){
-//     activeShape.blocks.forEach((block) => {
-//         if (block.x == squareX && squareY + squareHeight >= block.y){
-//             blockStore()
-//             squareX = 0;
-//             squareY = 0;
-//         }
-//         else if (block.x + squareHeight >= canvas.height){
-//             blockStore()
-//             squareX += 0;
-//             squareY = 0;
-//         }
-//     })
-// }
-
-// function drawStored(){
-//     storedBlocks.forEach((block) => {
-//         ctx.beginPath()
-//         ctx.fillStyle = 'pink'
-//         ctx.fillRect(block.x, block.y, squareWidth, squareHeight )
-//         ctx.closePath()
-//     })
-// }
-
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -135,10 +109,7 @@ function draw(){
     collisionBlocks ()
     drawStored()
   
-    // moveActiveBlock()
-    // collisionBottom()
-    // collisionBlocks()
-    // 
+    moveActiveBlock()
 
     intervalId = requestAnimationFrame(draw)
         if(intervalId == 2000){
