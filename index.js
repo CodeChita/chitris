@@ -1,4 +1,5 @@
-let btn = document.querySelector('button')
+let startBtn = document.querySelector('.start-btn')
+let pauseBtn = document.querySelector('.pause-btn')
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#302f29'
 let ctx = canvas.getContext('2d')
@@ -8,7 +9,7 @@ let activeState = 0
 let counter = 0
 let style = "pink"
 let storedBlocks = []
-let isLeft = false, isRight = false, isDown = false, pause = false
+let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true
 
 function drawShape (shape){
     shape.blocks.forEach((block) => {
@@ -97,27 +98,34 @@ function collisionBlocks(){
 
 // score checker => splice... 
 
-function checkborders(position){
-    let canMove = false
+function checkborders(direction){
+    
     activeShape.blocks.forEach((block) => {
-        
+        if (direction == 'left' && block.x == 0){
+            return canMove = false
+        }
+        else if (direction == 'right' && block.x + block.width == canvas.width){
+            return canMove = false
+        }
     })
+    return canMove
 }
 
 function moveActiveBlock(){
-    if (isLeft == true ){
-        checkborders("left")
+    
+    if (isLeft && checkborders("left")){
         activeShape.blocks.forEach((block) => block.x -= 50)
-        isLeft = false
     }
-    else if (isRight == true){
+    else if (isRight && checkborders("right")){
         activeShape.blocks.forEach((block) => block.x += 50)
-        isRight = false
     }
-    else if (isDown == true){
+    else if (isDown){
         activeShape.blocks.forEach((block) => block.y += 50)
-        isDown = false
     }
+        isLeft = false
+        isRight = false
+        isDown = false
+        canMove = true
 }
 
 function draw(){
@@ -132,16 +140,17 @@ function draw(){
     
 
     intervalId = requestAnimationFrame(draw)
-        if(intervalId == 2000){
-            console.log("end")
-            cancelAnimationFrame(intervalId)
-        } 
+        // if(intervalId == 2000){
+        //     console.log("end")
+        //     cancelAnimationFrame(intervalId)
+        // } 
 }
     
 
 
 window.addEventListener('load', () => {
-    btn.addEventListener('click',() => {
+    startBtn.addEventListener('click', () => draw())
+    pauseBtn.addEventListener('click',() => {
         !pause ? (cancelAnimationFrame(intervalId), pause = true) : (draw(), pause = false)
     })
     document.addEventListener('keydown', (event) => {
@@ -162,5 +171,5 @@ window.addEventListener('load', () => {
         }
     })
 
-    draw()
+    // draw()
 })
