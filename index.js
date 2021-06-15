@@ -1,3 +1,4 @@
+let btn = document.querySelector('button')
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#302f29'
 let ctx = canvas.getContext('2d')
@@ -7,14 +8,14 @@ let activeState = 0
 let counter = 0
 let style = "pink"
 let storedBlocks = []
-let isLeft = false, isRight = false, isDown = false;
+let isLeft = false, isRight = false, isDown = false, pause = false
 
 function drawShape (shape){
     shape.blocks.forEach((block) => {
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
-        ctx.fillStyle = 'pink'
+        ctx.strokeStyle = 'red'
         ctx.rect(block.x, block.y, block.width, block.height)
         ctx.stroke()
         ctx.closePath()
@@ -23,9 +24,9 @@ function drawShape (shape){
 function drawStored (){
     storedBlocks.forEach((block) => {
         ctx.beginPath()
-        ctx.fillStyle = 'blue'
-        ctx.fillRect(block.x, block.y, block.width, block.height)
         ctx.fillStyle = 'pink'
+        ctx.fillRect(block.x, block.y, block.width, block.height)
+        ctx.strokeStyle = 'red'
         ctx.rect(block.x, block.y, block.width, block.height)
         ctx.stroke()
         ctx.closePath()
@@ -38,38 +39,74 @@ function dropActiveShape() {
     })
 }
 
-function collisionBottom (){
+function collisionBottom (callback){
+    let check = false
     activeShape.blocks.forEach((block) => {
         if (block.y + block.height >= canvas.height){
-            activeState = 0
-           return blockStore(activeShape)
+            check = true
+            // activeState = 0
+            // console.log('collision', block)
+        //    return blockStore()
         }
+    
     })
+    !check ? callback() : null
+    return check ? blockStore() : null 
 }
-
 
 function createShape () {
     activeShape = new Shape(collectionShapes[Math.floor(Math.random() * 3)])
+    // console.log('createShape: ', activeShape)
     activeState = 1
     drawShape(activeShape)    
 }
-function blockStore(shape) {
-   activeShape.blocks.forEach((block) =>{
+
+function blockStore() {
+    // console.log(activeShape.blocks)
+    activeShape.blocks.forEach((block) =>{
+    // console.log(block)
     storedBlocks.push({
         x : block.x,
         y : block.y,
         width : block.width,
         height : block.height
     })
-   })
+})
+   activeState = 0
+   console.log(storedBlocks)
+}
+
+function collisionBlocks(){
+    let check = false
+    activeShape.blocks.forEach((block) => {
+        storedBlocks.forEach((storedBlock) => {
+            if(block.y + block.height == storedBlock.y && block.x == storedBlock.x){
+                return check = true
+            }
+            if(check){
+                return check
+            }
+        })
+    })
+    return check ? blockStore(activeShape) : null 
 }
 
 // sort stored blocks 
+// storedBlocks.sort()
+// console.log(storedBlocks)
 
 // score checker => splice... 
 
+function checkborders(position){
+    let canMove = false
+    activeShape.blocks.forEach((block) => {
+        
+    })
+}
+
 function moveActiveBlock(){
     if (isLeft == true ){
+        checkborders("left")
         activeShape.blocks.forEach((block) => block.x -= 50)
         isLeft = false
     }
@@ -83,36 +120,16 @@ function moveActiveBlock(){
     }
 }
 
-
-function collisionBlocks(){
-    activeShape.blocks.forEach((block) => {
-        storedBlocks.forEach((storedBlock) => {
-            if(block.y + block.height == storedBlock.y && block.x == storedBlock.x){
-                activeState = 0
-                return blockStore(activeShape)
-            }
-        })
-    })
-}
-
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     counter++;
-    // console.log('hello')
 
-    if (counter === 30 ){
-        console.log(counter)
-        dropActiveShape()
-        counter = 0
-        
-    }
+    counter === 60 ? (dropActiveShape(), counter = 0)  : null;
     activeState == 0 ? createShape() : drawShape(activeShape);
-
-    collisionBottom()
-    collisionBlocks ()
-    drawStored()
-  
     moveActiveBlock()
+    collisionBottom(collisionBlocks)
+    drawStored()
+    
 
     intervalId = requestAnimationFrame(draw)
         if(intervalId == 2000){
@@ -124,6 +141,9 @@ function draw(){
 
 
 window.addEventListener('load', () => {
+    btn.addEventListener('click',() => {
+        !pause ? (cancelAnimationFrame(intervalId), pause = true) : (draw(), pause = false)
+    })
     document.addEventListener('keydown', (event) => {
         if (event.code == 'ArrowRight') {
             isRight = true
@@ -141,5 +161,6 @@ window.addEventListener('load', () => {
             isDown = true
         }
     })
+
     draw()
 })
