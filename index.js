@@ -1,16 +1,18 @@
 let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
+let showScore = document.querySelector('h1')
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#302f29'
 let ctx = canvas.getContext('2d')
-let chitrisGrid = [0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]
+let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 let activeShape = {}
 let activeState = 0
 let counter = 0
 let style = "pink"
 let storedBlocks = []
 let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true
-
+let score = 0
+showScore.innerHTML = score
 function drawShape (shape){
     shape.blocks.forEach((block) => {
         ctx.beginPath()
@@ -64,28 +66,45 @@ function blockStore() {
         x : block.x,
         y : block.y,
         width : block.width,
-        height : block.height
+        height : block.height,
+        position : (750 - block.y) / 50
     })
     updateGrid(block.y)
     
 })
     storedBlocks.sort((a,b) => a.y > b.y ? 1 : ((b.y > a.y) ? -1 : 0)) 
-
+    // console.log(storedBlocks)
     activeState = 0
     // console.log(storedBlocks)
 }
 function updateGrid(block){
     chitrisGrid[(750 - block) / 50 ] += 50
-    console.log(chitrisGrid)
     chitrisCheck()
 }
 function chitrisCheck(){
-    chitrisGrid.forEach((row) => {
+    chitrisGrid.forEach((row, index) => {
         if (row == 500){
-            console.log("CHITRISSSSS")
+            chitrisGrid.splice(index, 1)
+            score += 100
+            showScore.innerHTML = score
+            let filterBlocks = storedBlocks.filter((block) =>{
+                return block.position != index
+            })
+
+            storedBlocks = filterBlocks
+            
+            storedBlocks.forEach((block) => {
+                if (block.position > index){
+                    console.log(block.position)
+                    block.position  -= 1
+                    console.log(block.position)
+                    block.y += 50
+
                 }
             })
         }
+    })
+}
 // score checker => splice... 
 
 function collisionBlocks(){
@@ -149,10 +168,6 @@ function draw(){
     
 
     intervalId = requestAnimationFrame(draw)
-        if(intervalId == 2000){
-            console.log("end")
-            cancelAnimationFrame(intervalId)
-        } 
 }
     
 
