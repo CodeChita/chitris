@@ -3,7 +3,7 @@ let pauseBtn = document.querySelector('.pause-btn')
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#302f29'
 let ctx = canvas.getContext('2d')
-
+let chitrisGrid = [0,0,0,0,0,0,0,0,0,0,0,0,0,0 ]
 let activeShape = {}
 let activeState = 0
 let counter = 0
@@ -45,9 +45,6 @@ function collisionBottom (callback){
     activeShape.blocks.forEach((block) => {
         if (block.y + block.height >= canvas.height){
             check = true
-            // activeState = 0
-            // console.log('collision', block)
-        //    return blockStore()
         }
     
     })
@@ -57,25 +54,39 @@ function collisionBottom (callback){
 
 function createShape () {
     activeShape = new Shape(collectionShapes[Math.floor(Math.random() * 3)])
-    // console.log('createShape: ', activeShape)
     activeState = 1
-    drawShape(activeShape)    
+    drawShape(activeShape)
 }
 
 function blockStore() {
-    // console.log(activeShape.blocks)
     activeShape.blocks.forEach((block) =>{
-    // console.log(block)
     storedBlocks.push({
         x : block.x,
         y : block.y,
         width : block.width,
         height : block.height
     })
+    updateGrid(block.y)
+    
 })
-   activeState = 0
-   console.log(storedBlocks)
+    storedBlocks.sort((a,b) => a.y > b.y ? 1 : ((b.y > a.y) ? -1 : 0)) 
+
+    activeState = 0
+    // console.log(storedBlocks)
 }
+function updateGrid(block){
+    chitrisGrid[(750 - block) / 50 ] += 50
+    console.log(chitrisGrid)
+    chitrisCheck()
+}
+function chitrisCheck(){
+    chitrisGrid.forEach((row) => {
+        if (row == 500){
+            console.log("CHITRISSSSS")
+                }
+            })
+        }
+// score checker => splice... 
 
 function collisionBlocks(){
     let check = false
@@ -92,11 +103,6 @@ function collisionBlocks(){
     return check ? blockStore(activeShape) : null 
 }
 
-// sort stored blocks 
-// storedBlocks.sort()
-// console.log(storedBlocks)
-
-// score checker => splice... 
 
 function checkborders(direction){
     
@@ -105,6 +111,9 @@ function checkborders(direction){
             return canMove = false
         }
         else if (direction == 'right' && block.x + block.width == canvas.width){
+            return canMove = false
+        }
+        else if (direction == 'down' && block.x + block.height == canvas.height){
             return canMove = false
         }
     })
@@ -119,7 +128,7 @@ function moveActiveBlock(){
     else if (isRight && checkborders("right")){
         activeShape.blocks.forEach((block) => block.x += 50)
     }
-    else if (isDown){
+    else if (isDown && checkborders("down")){
         activeShape.blocks.forEach((block) => block.y += 50)
     }
         isLeft = false
@@ -140,10 +149,10 @@ function draw(){
     
 
     intervalId = requestAnimationFrame(draw)
-        // if(intervalId == 2000){
-        //     console.log("end")
-        //     cancelAnimationFrame(intervalId)
-        // } 
+        if(intervalId == 2000){
+            console.log("end")
+            cancelAnimationFrame(intervalId)
+        } 
 }
     
 
