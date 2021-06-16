@@ -1,0 +1,10 @@
+
+
+body {
+    background-color: #D4DCD5;
+}
+.container {
+    height: max-content;
+    display: flex;
+    justify-content: space-around;
+}

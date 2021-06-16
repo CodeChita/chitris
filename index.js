@@ -2,7 +2,7 @@ let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
 let showScore = document.querySelector('h1')
 let canvas = document.querySelector('canvas')
-canvas.style.backgroundColor = '#302f29'
+canvas.style.backgroundColor = '#707070'
 let ctx = canvas.getContext('2d')
 let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 let activeShape = {}
@@ -19,7 +19,7 @@ function drawShape (shape){
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
-        ctx.strokeStyle = '#302f29'
+        ctx.strokeStyle = '#707070'
         ctx.rect(block.x, block.y, block.width, block.height)
         ctx.stroke()
         ctx.closePath()
@@ -108,6 +108,7 @@ function chitrisCheck(){
             storedBlocks = filterBlocks
             
             storedBlocks.forEach((block) => {
+                block.style = style[Math.floor(Math.random() * style.length)]
                 if (block.position > index){
                     console.log(block.position)
                     block.position  -= 1
@@ -127,10 +128,6 @@ function collisionBlocks(){
             if(block.y + block.height == storedBlock.y && block.x == storedBlock.x){
                 return check = true
             }
-            // else if(block.x == storedBlock.x && storedBlock.y == 50 && block.y == 50 ){
-            //     console.log("KILL GAME")
-            //     killGame = true
-            // }  
             if(check){
                 return check
             }
