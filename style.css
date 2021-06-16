@@ -4,11 +4,16 @@ body {
     background-image: url('./background.png');
 }
 .container {
-    padding-top: 50px;
+
     /* height: max-contet; */
     display: flex;
 
     justify-content: center;
+
+}
+canvas {
+    border-right: rgb(151, 151, 151) solid 10px;
+    border-bottom: rgb(151, 151, 151) solid 10px;
 }
 .btns {
     display: flex;

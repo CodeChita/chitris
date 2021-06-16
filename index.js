@@ -1,9 +1,8 @@
 let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
 var audio = new Audio('./soundbites/backgroundbeat.wav')
-let showScore = document.querySelector('h1')
 let canvas = document.querySelector('canvas')
-canvas.style.backgroundColor = '#707070'
+canvas.style.backgroundColor = '#DCD5D3'
 let ctx = canvas.getContext('2d')
 let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 let activeShape = {}
@@ -16,13 +15,12 @@ let killGame = false
 let score = 0
 
 
-showScore.innerHTML = score
 function drawShape (shape){
     shape.blocks.forEach((block) => {
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
-        ctx.strokeStyle = '#707070'
+        ctx.strokeStyle = '#DCD5D3'
         ctx.rect(block.x, block.y, block.width, block.height)
         ctx.stroke()
         ctx.closePath()
@@ -34,6 +32,8 @@ function drawStored (){
         ctx.fillStyle = block.style
         ctx.fillRect(block.x, block.y, block.width, block.height)
         ctx.rect(block.x, block.y, block.width, block.height)
+        ctx.strokeStyle = '#DCD5D3'
+        ctx.stroke()
         ctx.closePath()
         })
 }
@@ -103,7 +103,6 @@ function chitrisCheck(){
             chitrisGrid.splice(index, 1)
             chitrisGrid.push(0)
             score += 100
-            showScore.innerHTML = score
             let filterBlocks = storedBlocks.filter((block) =>{
                 return block.position != index
             })
@@ -169,16 +168,10 @@ function moveActiveBlock(){
         canMove = true
 }
 
-function drawStroke(){
-    ctx.beginPath()
-    ctx.strokeStyle = 'pink'
-    ctx.rect(0, 50, canvas.width, canvas.height)
-    ctx.stroke()
-}
+
 function draw(){
     audio.play()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    drawStroke()
     counter++;
 
     counter === 40 ? (dropActiveShape(), counter = 0)  : null;
@@ -188,9 +181,10 @@ function draw(){
     drawStored()
     collisionTop () // LOOK AT THIS
 
-    
+    borderScreen()
     if (killGame){
         cancelAnimationFrame(intervalId)
+        borderScreen()
     }
     else {
         intervalId = requestAnimationFrame(draw)
@@ -200,6 +194,8 @@ function draw(){
 
 
 window.addEventListener('load', () => {
+    borderScreen()
+    startScreen()
     startBtn.addEventListener('click', () => draw())
     pauseBtn.addEventListener('click',() => {
         !pause ? (cancelAnimationFrame(intervalId), pause = true) : (draw(), pause = false)
