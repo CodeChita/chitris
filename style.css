@@ -1,10 +1,17 @@
 
 
 body {
-    background-color: #D4DCD5;
+    background-image: url('./background.png');
 }
 .container {
-    height: max-content;
+    padding-top: 50px;
+    /* height: max-contet; */
     display: flex;
-    justify-content: space-around;
+
+    justify-content: center;
+}
+.btns {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
 }

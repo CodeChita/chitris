@@ -1,5 +1,6 @@
 let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
+var audio = new Audio('./soundbites/backgroundbeat.wav')
 let showScore = document.querySelector('h1')
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#707070'
@@ -13,6 +14,8 @@ let storedBlocks = []
 let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true
 let killGame = false
 let score = 0
+
+
 showScore.innerHTML = score
 function drawShape (shape){
     shape.blocks.forEach((block) => {
@@ -56,8 +59,7 @@ function collisionBottom (callback){
 
 function collisionTop (){
     let topRow = storedBlocks.filter((block) => block.position == 14)
-    console.log(topRow)
-    if (topRow.length > 0){
+    if (topRow.length !== 0){
         activeShape.blocks.forEach((block) => {
             for(let i = 0; i < topRow.length; i++){
                 if (block.x == toprow[i].x){
@@ -110,9 +112,7 @@ function chitrisCheck(){
             storedBlocks.forEach((block) => {
                 block.style = style[Math.floor(Math.random() * style.length)]
                 if (block.position > index){
-                    console.log(block.position)
                     block.position  -= 1
-                    console.log(block.position)
                     block.y += 50
 
                 }
@@ -176,6 +176,7 @@ function drawStroke(){
     ctx.stroke()
 }
 function draw(){
+    audio.play()
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawStroke()
     counter++;
@@ -185,7 +186,7 @@ function draw(){
     moveActiveBlock()
     collisionBottom(collisionBlocks)
     drawStored()
-    collisionTop ()
+    collisionTop () // LOOK AT THIS
 
     
     if (killGame){
@@ -221,5 +222,6 @@ window.addEventListener('load', () => {
         }
     })
 
-    draw()
+    // draw()
+    // audio.play()
 })
