@@ -8,9 +8,10 @@ let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
 let activeShape = {}
 let activeState = 0
 let counter = 0
-let style = "pink"
+let style = ["#FF5733",'#C4FC1A', '#86FF33', '#FFFC33', '#33FFDC', '#33A9FF', '#4933FF', '#A233FF', '#E633FF', '#FF33E3', '#FF33E3']
 let storedBlocks = []
 let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true
+let killGame = false
 let score = 0
 showScore.innerHTML = score
 function drawShape (shape){
@@ -18,7 +19,7 @@ function drawShape (shape){
         ctx.beginPath()
         ctx.fillStyle = 'blue'
         ctx.fillRect(block.x, block.y, block.width, block.height)
-        ctx.strokeStyle = 'red'
+        ctx.strokeStyle = '#302f29'
         ctx.rect(block.x, block.y, block.width, block.height)
         ctx.stroke()
         ctx.closePath()
@@ -27,11 +28,9 @@ function drawShape (shape){
 function drawStored (){
     storedBlocks.forEach((block) => {
         ctx.beginPath()
-        ctx.fillStyle = 'pink'
+        ctx.fillStyle = block.style
         ctx.fillRect(block.x, block.y, block.width, block.height)
-        ctx.strokeStyle = 'red'
         ctx.rect(block.x, block.y, block.width, block.height)
-        ctx.stroke()
         ctx.closePath()
         })
 }
@@ -43,6 +42,7 @@ function dropActiveShape() {
 }
 
 function collisionBottom (callback){
+    collisionTop ()
     let check = false
     activeShape.blocks.forEach((block) => {
         if (block.y + block.height >= canvas.height){
@@ -54,8 +54,23 @@ function collisionBottom (callback){
     return check ? blockStore() : null 
 }
 
+function collisionTop (){
+    let topRow = storedBlocks.filter((block) => block.position == 14)
+    console.log(topRow)
+    if (topRow.length > 0){
+        activeShape.blocks.forEach((block) => {
+            for(let i = 0; i < topRow.length; i++){
+                if (block.x == toprow[i].x){
+                    killGame = true
+                }
+            }
+        })
+    }
+
+}
+
 function createShape () {
-    activeShape = new Shape(collectionShapes[Math.floor(Math.random() * 3)])
+    activeShape = new Shape(collectionShapes[Math.floor(Math.random() * collectionShapes.length)])
     activeState = 1
     drawShape(activeShape)
 }
@@ -67,15 +82,14 @@ function blockStore() {
         y : block.y,
         width : block.width,
         height : block.height,
-        position : (750 - block.y) / 50
+        position : ((canvas.height - 50) - block.y) / 50, 
+        style : style[Math.floor(Math.random() * style.length)]
     })
     updateGrid(block.y)
     
 })
     storedBlocks.sort((a,b) => a.y > b.y ? 1 : ((b.y > a.y) ? -1 : 0)) 
-    // console.log(storedBlocks)
     activeState = 0
-    // console.log(storedBlocks)
 }
 function updateGrid(block){
     chitrisGrid[(750 - block) / 50 ] += 50
@@ -85,12 +99,12 @@ function chitrisCheck(){
     chitrisGrid.forEach((row, index) => {
         if (row == 500){
             chitrisGrid.splice(index, 1)
+            chitrisGrid.push(0)
             score += 100
             showScore.innerHTML = score
             let filterBlocks = storedBlocks.filter((block) =>{
                 return block.position != index
             })
-
             storedBlocks = filterBlocks
             
             storedBlocks.forEach((block) => {
@@ -105,7 +119,6 @@ function chitrisCheck(){
         }
     })
 }
-// score checker => splice... 
 
 function collisionBlocks(){
     let check = false
@@ -114,6 +127,10 @@ function collisionBlocks(){
             if(block.y + block.height == storedBlock.y && block.x == storedBlock.x){
                 return check = true
             }
+            // else if(block.x == storedBlock.x && storedBlock.y == 50 && block.y == 50 ){
+            //     console.log("KILL GAME")
+            //     killGame = true
+            // }  
             if(check){
                 return check
             }
@@ -124,7 +141,6 @@ function collisionBlocks(){
 
 
 function checkborders(direction){
-    
     activeShape.blocks.forEach((block) => {
         if (direction == 'left' && block.x == 0){
             return canMove = false
@@ -156,18 +172,31 @@ function moveActiveBlock(){
         canMove = true
 }
 
+function drawStroke(){
+    ctx.beginPath()
+    ctx.strokeStyle = 'pink'
+    ctx.rect(0, 50, canvas.width, canvas.height)
+    ctx.stroke()
+}
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    drawStroke()
     counter++;
 
-    counter === 60 ? (dropActiveShape(), counter = 0)  : null;
+    counter === 40 ? (dropActiveShape(), counter = 0)  : null;
     activeState == 0 ? createShape() : drawShape(activeShape);
     moveActiveBlock()
     collisionBottom(collisionBlocks)
     drawStored()
-    
+    collisionTop ()
 
-    intervalId = requestAnimationFrame(draw)
+    
+    if (killGame){
+        cancelAnimationFrame(intervalId)
+    }
+    else {
+        intervalId = requestAnimationFrame(draw)
+    }
 }
     
 
@@ -195,5 +224,5 @@ window.addEventListener('load', () => {
         }
     })
 
-    // draw()
+    draw()
 })
