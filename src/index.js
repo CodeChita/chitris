@@ -20,7 +20,7 @@ let storedBlocks = []
 let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true, startGame = true, restart = false
 let killGame = false
 let score = 0
-
+let scoreArray = []
 
 function drawShape (shape){
     shape.blocks.forEach((block) => {
@@ -177,7 +177,6 @@ function createShape () {
     activeState = 1
     drawShape(activeShape)
 }
-
 function draw(){
     ctx.clearRect(0, 50, canvas.width, canvas.height)
     borderScreen()
@@ -192,11 +191,12 @@ function draw(){
 
     if (killGame){
         cancelAnimationFrame(intervalId)
+        scoreArray.push(score)
         scoreCheck()    
         endScreen()
         if (!restart){
             restart = true
-            endBtn.innerHTML = 'new game'
+            endBtn.innerHTML = 'Try again'
             startGame = false
             startBtn.innerHTML = "pause"
         }
@@ -218,8 +218,8 @@ function gameRestart(){
     startBtn.innerHTML = "start"
     storedBlocks = []
     score = 0
+    
     draw()
-    startGame = false
 }
 
 window.addEventListener('load', () => {
@@ -242,13 +242,15 @@ window.addEventListener('load', () => {
         if (!restart){
             killGame = true
             restart = true
-            endBtn.innerHTML = 'new game'
+            endBtn.innerHTML = 'Try again'
         }
         else {
             restart = false 
             killGame = false
+            startGame = false
             gameRestart()
-
+            startBtn.innerHTML = "pause"
+            endBtn.innerHTML = 'End Game'
         }
     })
     document.addEventListener('keydown', (event) => {
