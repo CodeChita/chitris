@@ -1,6 +1,7 @@
 let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
 var audio = new Audio('./soundbites/backgroundbeat.wav')
+audio.volume = 0.1
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#DCD5D3'
 let ctx = canvas.getContext('2d')
@@ -62,7 +63,7 @@ function collisionTop (){
     if (topRow.length !== 0){
         activeShape.blocks.forEach((block) => {
             for(let i = 0; i < topRow.length; i++){
-                if (block.x == toprow[i].x){
+                if (block.x == topRow[i].x){
                     killGame = true
                 }
             }
@@ -170,8 +171,10 @@ function moveActiveBlock(){
 
 
 function draw(){
+    ctx.clearRect(0, 50, canvas.width, canvas.height)
+    borderScreen()
     audio.play()
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
     counter++;
 
     counter === 40 ? (dropActiveShape(), counter = 0)  : null;
@@ -179,19 +182,17 @@ function draw(){
     moveActiveBlock()
     collisionBottom(collisionBlocks)
     drawStored()
-    collisionTop () // LOOK AT THIS
 
-    borderScreen()
     if (killGame){
         cancelAnimationFrame(intervalId)
-        borderScreen()
+        console.log('WHAAA')
+        endScreen()
+
     }
     else {
         intervalId = requestAnimationFrame(draw)
     }
 }
-    
-
 
 window.addEventListener('load', () => {
     borderScreen()
@@ -217,7 +218,4 @@ window.addEventListener('load', () => {
             isDown = true
         }
     })
-
-    // draw()
-    // audio.play()
 })

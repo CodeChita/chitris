@@ -2,14 +2,11 @@
 
 body {
     background-image: url('./background.png');
+    font-family: 'Press Start 2P';
 }
 .container {
-
-    /* height: max-contet; */
     display: flex;
-
     justify-content: center;
-
 }
 canvas {
     border-right: rgb(151, 151, 151) solid 10px;
@@ -19,4 +16,20 @@ canvas {
     display: flex;
     justify-content: center;
     padding: 5px;
+}
+
+button {
+    background-color: #EEEBEB;
+    border: none;
+    color: #979797;
+    padding: 15px 32px;
+    font-family: 'Press Start 2P';
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-right: rgb(151, 151, 151) solid 5px;
+    border-bottom: rgb(151, 151, 151) solid 5px;
 }
