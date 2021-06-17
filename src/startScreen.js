@@ -28,14 +28,15 @@ function startScreen(){
         ctx.fillStyle = '#EEEBEB'
         ctx.fillRect(50, 250, (canvas.width - 100) , 400)
         ctx.fillStyle = '#979797'
-        ctx.fillText(`bla bla bla`, 130, 350);
+        ctx.textAlign = "center"
+        ctx.fillText(`bla bla bla`, 250, 350);
     ctx.closePath()
 }
 
 function endScreen(){
     ctx.beginPath()
     ctx.globalAlpha = 0.50;
-    ctx.fillStyle = '#EEEBEB'
+    ctx.fillStyle = '#979797'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.closePath()
     ctx.beginPath()
@@ -48,4 +49,7 @@ function endScreen(){
         ctx.fillText(`${score} `,250, 400);
     ctx.closePath()
     
+}
+function scoreCheck(){
+    score < 200 ? explorer.play() : pablo.play()
 }

@@ -1,7 +1,13 @@
 let startBtn = document.querySelector('.start-btn')
 let pauseBtn = document.querySelector('.pause-btn')
-var audio = new Audio('./soundbites/backgroundbeat.wav')
-audio.volume = 0.1
+let audioBackground = new Audio('./soundbites/backgroundbeat.wav')
+let yeahSound = new Audio('./soundbites/test.m4a')
+let matchaSound = new Audio('./soundbites/matcha.m4a')
+let explorer = new Audio('./soundbites/explorer.m4a')
+let pablo = new Audio('./soundbites/pablo.m4a')
+audioBackground.volume = 0.1
+yeahSound.volume = 0.8
+explorer.volume = 1
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#DCD5D3'
 let ctx = canvas.getContext('2d')
@@ -19,7 +25,7 @@ let score = 0
 function drawShape (shape){
     shape.blocks.forEach((block) => {
         ctx.beginPath()
-        ctx.fillStyle = 'blue'
+        ctx.fillStyle = 'rgb(151, 151, 151)'
         ctx.fillRect(block.x, block.y, block.width, block.height)
         ctx.strokeStyle = '#DCD5D3'
         ctx.rect(block.x, block.y, block.width, block.height)
@@ -101,6 +107,7 @@ function updateGrid(block){
 function chitrisCheck(){
     chitrisGrid.forEach((row, index) => {
         if (row == 500){
+            yeahSound.play()
             chitrisGrid.splice(index, 1)
             chitrisGrid.push(0)
             score += 100
@@ -173,8 +180,7 @@ function moveActiveBlock(){
 function draw(){
     ctx.clearRect(0, 50, canvas.width, canvas.height)
     borderScreen()
-    audio.play()
-    
+    audioBackground.play()
     counter++;
 
     counter === 40 ? (dropActiveShape(), counter = 0)  : null;
@@ -185,7 +191,7 @@ function draw(){
 
     if (killGame){
         cancelAnimationFrame(intervalId)
-        console.log('WHAAA')
+        scoreCheck()    
         endScreen()
 
     }
@@ -197,7 +203,10 @@ function draw(){
 window.addEventListener('load', () => {
     borderScreen()
     startScreen()
-    startBtn.addEventListener('click', () => draw())
+    startBtn.addEventListener('click', () => {
+        matchaSound.play()
+        draw()
+    })
     pauseBtn.addEventListener('click',() => {
         !pause ? (cancelAnimationFrame(intervalId), pause = true) : (draw(), pause = false)
     })

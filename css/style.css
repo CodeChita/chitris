@@ -1,7 +1,7 @@
 
 
 body {
-    background-image: url('./background.png');
+    background-image: url('..//img/background.png');
     font-family: 'Press Start 2P';
 }
 .container {
@@ -32,4 +32,10 @@ button {
     cursor: pointer;
     border-right: rgb(151, 151, 151) solid 5px;
     border-bottom: rgb(151, 151, 151) solid 5px;
+}
+button:hover {
+    color: #EEEBEB;
+    background-color: #979797;
+    border-left: #6c6c6c solid 5px;
+    border-top: #6c6c6c solid 5px;
 }
