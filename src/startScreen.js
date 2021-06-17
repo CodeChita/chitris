@@ -1,5 +1,6 @@
-let startTxt = `bla 
-bla bla`
+let startTxt = [`welcome to tetris!`, `made by @codechita`, `feat. George, Pablo,`,`Manish and Jules`]
+let img = new Image()
+img.src = './img/logo.png'
 function borderScreen(){
     ctx.beginPath()
     ctx.fillStyle = '#EEEBEB'
@@ -25,11 +26,17 @@ function borderScreen(){
 
 function startScreen(){
     ctx.beginPath()
+    ctx.drawImage(img, 100, 350, 200, 200)
         ctx.fillStyle = '#EEEBEB'
         ctx.fillRect(50, 250, (canvas.width - 100) , 400)
         ctx.fillStyle = '#979797'
         ctx.textAlign = "center"
-        ctx.fillText(`bla bla bla`, 250, 350);
+        ctx.fillText(startTxt[0], 250, 300);
+        ctx.drawImage(img, 115, 310, 250, 250)
+        ctx.font = "10px 'Press Start 2P'"
+        ctx.fillText(startTxt[1], 250, 600);
+        ctx.fillText(startTxt[2], 250, 615);
+        ctx.fillText(startTxt[3], 250, 630);
     ctx.closePath()
 }
 

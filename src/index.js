@@ -1,5 +1,5 @@
 let startBtn = document.querySelector('.start-btn')
-let pauseBtn = document.querySelector('.pause-btn')
+let endBtn = document.querySelector('.end-btn')
 let audioBackground = new Audio('./soundbites/backgroundbeat.wav')
 let yeahSound = new Audio('./soundbites/test.m4a')
 let matchaSound = new Audio('./soundbites/matcha.m4a')
@@ -11,13 +11,13 @@ explorer.volume = 1
 let canvas = document.querySelector('canvas')
 canvas.style.backgroundColor = '#DCD5D3'
 let ctx = canvas.getContext('2d')
-let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ]
+let chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 let activeShape = {}
 let activeState = 0
 let counter = 0
 let style = ["#FF5733",'#C4FC1A', '#86FF33', '#FFFC33', '#33FFDC', '#33A9FF', '#4933FF', '#A233FF', '#E633FF', '#FF33E3', '#FF33E3']
 let storedBlocks = []
-let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true
+let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true, startGame = true, restart = false
 let killGame = false
 let score = 0
 
@@ -78,11 +78,7 @@ function collisionTop (){
 
 }
 
-function createShape () {
-    activeShape = new Shape(collectionShapes[Math.floor(Math.random() * collectionShapes.length)])
-    activeState = 1
-    drawShape(activeShape)
-}
+
 
 function blockStore() {
     activeShape.blocks.forEach((block) =>{
@@ -176,6 +172,11 @@ function moveActiveBlock(){
         canMove = true
 }
 
+function createShape () {
+    activeShape = new Shape(collectionShapes[Math.floor(Math.random() * collectionShapes.length)])
+    activeState = 1
+    drawShape(activeShape)
+}
 
 function draw(){
     ctx.clearRect(0, 50, canvas.width, canvas.height)
@@ -193,22 +194,62 @@ function draw(){
         cancelAnimationFrame(intervalId)
         scoreCheck()    
         endScreen()
-
+        if (!restart){
+            restart = true
+            endBtn.innerHTML = 'new game'
+            startGame = false
+            startBtn.innerHTML = "pause"
+        }
     }
     else {
         intervalId = requestAnimationFrame(draw)
     }
 }
 
+function gameRestart(){
+    ctx.clearRect(0, 50, canvas.width, canvas.height)
+    borderScreen()
+    startScreen()
+    chitrisGrid = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    activeShape = {}
+    activeState = 0
+    counter = 0
+    matchaSound.play()
+    startBtn.innerHTML = "start"
+    storedBlocks = []
+    score = 0
+    draw()
+    startGame = false
+}
+
 window.addEventListener('load', () => {
     borderScreen()
     startScreen()
     startBtn.addEventListener('click', () => {
-        matchaSound.play()
-        draw()
+        if (startGame){
+            startBtn.innerHTML = "pause"
+            matchaSound.play()
+            draw()
+            startGame = false
+        }
+        else {
+            !startGame ? (cancelAnimationFrame(intervalId), startGame = true, startBtn.innerHTML = "resume") : (draw(), startGame = false)
+        }
+
     })
-    pauseBtn.addEventListener('click',() => {
-        !pause ? (cancelAnimationFrame(intervalId), pause = true) : (draw(), pause = false)
+    endBtn.addEventListener('click',() => {
+        
+        if (!restart){
+            killGame = true
+            restart = true
+            endBtn.innerHTML = 'new game'
+        }
+        else {
+            restart = false 
+            killGame = false
+            gameRestart()
+
+        }
     })
     document.addEventListener('keydown', (event) => {
         if (event.code == 'ArrowRight') {
