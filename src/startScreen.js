@@ -1,5 +1,5 @@
 let startTxt = [`welcome to tetris!`, `made by @codechita`, `feat. George, Pablo,`,`Manish and Jules`]
-let loseText = [`"Ahh loser,` `you're as bad as`, ` INTERNET EXPLORER"`, ` - Manish`]
+let loseText = [`"Ahh loser,`, `you're as bad as`, ` INTERNET EXPLORER"`, ` - Manish`]
 let winText = [`WHOOHOOOO!`, `Pablo is very`, `proud of you`]
 let img = new Image()
 img.src = './img/logo.png'
