@@ -1,4 +1,6 @@
 let startTxt = [`welcome to tetris!`, `made by @codechita`, `feat. George, Pablo,`,`Manish and Jules`]
+let loseText = [`"Ahh loser,` `you're as bad as`, ` INTERNET EXPLORER"`, ` - Manish`]
+let winText = [`WHOOHOOOO!`, `Pablo is very`, `proud of you`]
 let img = new Image()
 img.src = './img/logo.png'
 function borderScreen(){
@@ -53,10 +55,30 @@ function endScreen(){
     ctx.fillRect(50, 250, (canvas.width - 100) , 400)
     ctx.fillStyle = '#979797'
     ctx.textAlign = "center"
-    ctx.fillText(`Your score is `, 250, 400);
-    ctx.fillText(`${score} `,250, 430);
+    if(score < 200 ){
+        ctx.fillText(loseText[0], 250, 330);
+        ctx.fillText(loseText[1], 250, 360);
+        ctx.fillStyle = 'red'
+        ctx.font = "20px 'Press Start 2P'"
+        ctx.fillText(loseText[2], 250, 390);
+        ctx.font = "10px 'Press Start 2P'"
+        ctx.fillStyle = '#979797'
+        ctx.fillText(loseText[3], 250, 410);
+    }
+    else {
+        ctx.font = "20px 'Press Start 2P'"
+        ctx.fillStyle = 'green'
+        ctx.fillText(winText[0], 250, 330);
+        ctx.fillText(winText[1], 250, 360);
+        ctx.fillText(winText[2], 250, 390);
+    }
+    ctx.fillStyle = '#979797'
+    ctx.font = "20px 'Press Start 2P'"
+    ctx.fillText(`Your score is `, 250, 480);
+    ctx.fillText(`${score} `,250, 510);
     ctx.closePath()
     }
+
 function scoreCheck(){
-    score < 300 ? explorer.play() : pablo.play()
+    score < 300 || score == 0  ? explorer.play() : pablo.play()
 }

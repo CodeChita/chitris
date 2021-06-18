@@ -19,7 +19,7 @@ let style = ["#FF5733",'#C4FC1A', '#86FF33', '#FFFC33', '#33FFDC', '#33A9FF', '#
 let storedBlocks = []
 let isLeft = false, isRight = false, isDown = false, pause = false, canMove = true, startGame = true, restart = false
 let killGame = false
-let score = 0
+let score = 0, speed = 40
 let scoreArray = []
 
 function drawShape (shape){
@@ -58,7 +58,6 @@ function collisionBottom (callback){
         if (block.y + block.height >= canvas.height){
             check = true
         }
-    
     })
     !check ? callback() : null
     return check ? blockStore() : null 
@@ -77,7 +76,6 @@ function collisionTop (){
     }
 
 }
-
 
 
 function blockStore() {
@@ -183,7 +181,7 @@ function draw(){
     audioBackground.play()
     counter++;
 
-    counter === 40 ? (dropActiveShape(), counter = 0)  : null;
+    counter === speed ? (dropActiveShape(), counter = 0)  : null;
     activeState == 0 ? createShape() : drawShape(activeShape);
     moveActiveBlock()
     collisionBottom(collisionBlocks)
